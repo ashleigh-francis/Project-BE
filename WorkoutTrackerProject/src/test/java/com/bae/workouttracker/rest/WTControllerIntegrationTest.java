@@ -7,6 +7,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.jupiter.api.Test;
@@ -39,7 +40,7 @@ public class WTControllerIntegrationTest {
 	private ObjectMapper mapper; // takes the class Spring uses to convert Java to JSON
 
 	@Test
-	void testCreate() throws Exception { // if you get an exception mid test - let fail
+	void testCreate() throws Exception {
 		WorkoutTracker testWorkout = new WorkoutTracker(2, "Monday", 2, "Weights upper body",
 				"To improve upper body strength");
 		String testWorkoutASJSON = this.mapper.writeValueAsString(testWorkout); // converts to JSON
@@ -120,9 +121,11 @@ public class WTControllerIntegrationTest {
 
 		System.out.println("step 2");
 		String testWorkoutsAsJSON = this.mapper.writeValueAsString(testWorkouts);
+
 		System.out.println("step 3");
 		ResultMatcher checkBody = content().json(testWorkoutsAsJSON);
 		RequestBuilder request = get("/getByDay/Monday");
+
 		System.out.println("step 4");
 		this.mockMVC.perform(request).andExpect(checkBody).andExpect(checkStatus);
 
@@ -130,6 +133,18 @@ public class WTControllerIntegrationTest {
 
 	@Test
 	void testGetAllWorkouts() throws Exception {
+		RequestBuilder request = get("/getAllWorkouts");
+
+		ResultMatcher checkStatus = status().is(200);
+
+		List<WorkoutTracker> workouts = new ArrayList<>();
+		WorkoutTracker testGetAll = new WorkoutTracker("Monday", 1, "cardio", "To improve my endurance");
+		testGetAll.setId(1);
+		workouts.add(testGetAll);
+		String testCreatedAsJSON = this.mapper.writeValueAsString(workouts);
+
+		ResultMatcher checkBody = content().json(testCreatedAsJSON);
+		this.mockMVC.perform(request).andExpect(checkBody).andExpect(checkStatus);
 
 	}
 }
