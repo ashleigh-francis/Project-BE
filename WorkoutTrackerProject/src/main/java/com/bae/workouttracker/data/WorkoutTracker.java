@@ -77,6 +77,14 @@ public class WorkoutTracker {
 		this.goal = goal;
 	}
 
+	public WorkoutTracker(String dayOfWeek, int hoursOfExercise, String typeOfExercise, String goal) {
+		super();
+		this.dayOfWeek = dayOfWeek;
+		this.hoursOfExercise = hoursOfExercise;
+		this.typeOfExercise = typeOfExercise;
+		this.goal = goal;
+	}
+
 	public int getId() {
 		return id;
 	}
