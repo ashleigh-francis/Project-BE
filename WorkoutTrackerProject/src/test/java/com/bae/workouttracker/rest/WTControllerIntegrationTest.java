@@ -28,8 +28,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 @AutoConfigureMockMvc
-@Sql(scripts = { "classpath:WorkoutTracker-data.sql",
-		"classpath:WorkoutTracker-schema.sql" }, executionPhase = ExecutionPhase.BEFORE_TEST_METHOD)
+@Sql(scripts = { "classpath:WorkoutTracker-schema.sql",
+		"classpath:WorkoutTracker-data.sql" }, executionPhase = ExecutionPhase.BEFORE_TEST_METHOD)
 @ActiveProfiles("test")
 public class WTControllerIntegrationTest {
 
@@ -68,8 +68,7 @@ public class WTControllerIntegrationTest {
 		RequestBuilder request = get("/getWorkout/1");
 		ResultMatcher checkStatus = status().is(200);
 
-		WorkoutTracker testGetWorkout = new WorkoutTracker("Tuesday", 1, "Weights lower body",
-				"to improve lower body strength");
+		WorkoutTracker testGetWorkout = new WorkoutTracker("Monday", 1, "cardio", "To improve my endurance");
 		testGetWorkout.setId(1);
 		String testCreatedAsJSON = this.mapper.writeValueAsString(testGetWorkout);
 
@@ -104,7 +103,7 @@ public class WTControllerIntegrationTest {
 		RequestBuilder request = delete("/deleteWorkout/1");
 
 		ResultMatcher checkStatus = status().is(204);
-		ResultMatcher checkBody = content().string("Deleted Workout: 1");
+		ResultMatcher checkBody = content().string("Deleted: 1");
 
 		this.mockMVC.perform(request).andExpect(checkStatus).andExpect(checkBody);
 	}
@@ -117,7 +116,7 @@ public class WTControllerIntegrationTest {
 		System.out.println("step 1");
 
 		List<WorkoutTracker> testWorkouts = List
-				.of(new WorkoutTracker("Monday", 1, "cardio", "To improve my endurance"));
+				.of(new WorkoutTracker(1, "Monday", 1, "cardio", "To improve my endurance"));
 
 		System.out.println("step 2");
 		String testWorkoutsAsJSON = this.mapper.writeValueAsString(testWorkouts);
